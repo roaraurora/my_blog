@@ -1,6 +1,44 @@
 {% extends 'blog/base.html' %}
+{% block head %}
+    <style>
+    .pagination {margin-top: 25px; text-align: center;}
+.pagination a {
+  display: inline-block;
+  line-height: 38px;
+  padding: 0 15px;
+  margin-right: 4px;
+  text-align: center;
+  background-color: #fff;
+  user-select: none;
+  cursor: pointer;
+  font-size: 14px;
+  border: 1px solid #d7dde4;
+  border-radius: 4px;
+  transition: all .2s ease-in-out;
+}
+.pagination a:hover {
+  color: #777B88;
+  border: 1px solid #777B88;
+}
+.pagination .current-page {color: white; background-color: #777B88;}
+.pagination .current-page:hover {
+  color: white;
+  border: 1px solid #777B88;
+}
+.pagination span {
+  display: inline-block;
+  font-size: 20px;
+  line-height: 38px;
+  padding: 0 8px;
+  margin-right: 4px;
+}</style>
+{% endblock %}
 {% block main %}
+    {% if error_msg %}
+        <p>{{ error_msg }}</p>
+    {% endif %}
     {% for post in post_list %}
+        <div>
         <article class="post post-{{ post.pk }}">
             <header class="entry-header">
                 <h1 class="entry-title">
@@ -12,38 +50,46 @@
                                                               datetime="2012-11-09T23:15:57+00:00">{{ post.created_time }}</time></a></span>
                     <span class="post-author"><a href="#">{{ post.author }}</a></span>
                     <span class="comments-link"><a href="#">{{ post.comment_set.count }} 评论</a></span>
-                    <span class="views-count"><a href="#">588 阅读</a></span>
+                    <span class="views-count"><a href="#">{{ post.views }} 阅读</a></span>
                 </div>
             </header>
             <div class="entry-content clearfix">
-                <p>{{ post.excerpt }}</p>
+                <p>{{ post.excerpt }}...</p>
                 <div class="read-more cl-effect-14">
                     <a href="{{ post.get_absolute_url }}" class="more-link">继续阅读 <span class="meta-nav">→</span></a>
                 </div>
             </div>
         </article>
+        <div>
     {% empty %}
         <div class="no-post">暂时没有发布的文章！</div>
     {% endfor %}
 
-    <!-- 简单分页效果
-    <div class="pagination-simple">
-        <a href="#">上一页</a>
-        <span class="current">第 6 页 / 共 11 页</span>
-        <a href="#">下一页</a>
-    </div>
-    -->
-    <div class="pagination">
-        <ul>
-            <li><a href="">1</a></li>
-            <li><a href="">...</a></li>
-            <li><a href="">4</a></li>
-            <li><a href="">5</a></li>
-            <li class="current"><a href="">6</a></li>
-            <li><a href="">7</a></li>
-            <li><a href="">8</a></li>
-            <li><a href="">...</a></li>
-            <li><a href="">11</a></li>
-        </ul>
-    </div>
+    {% if is_paginated %}
+        <div class="pagination">
+    {% if first %}
+        <a href="?page=1">1</a>
+    {% endif %}
+    {% if left %}
+    {% if left_has_more %}
+        <span>...</span>
+    {% endif %}
+    {% for i in left %}
+        <a href="?page={{ i }}">{{ i }}</a>
+    {% endfor %}
+    {% endif %}
+        <a class="current-page" href="?page={{ page_obj.number }}" >{{ page_obj.number }}</a>
+    {% if right %}
+    {% for i in right %}
+        <a href="?page={{ i }}">{{ i }}</a>
+    {% endfor %}
+    {% if right_has_more %}
+        <span>...</span>
+    {% endif %}
+    {% endif %}
+    {% if last %}
+        <a href="?page={{ paginator.num_pages }}">{{ paginator.num_pages }}</a>
+    {% endif %}
+        </div>
+    {% endif %}
 {% endblock main %}
