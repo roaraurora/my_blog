@@ -23,9 +23,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'ns=a902s3s!lajt%ppo70@0927dy)$_ys#zevh88krgle$_v$8'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+# DEBUG = True
+DEBUG = False
+#TODO
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '120.79.223.90', 'roaraurora.top']
 
 
 # Application definition
